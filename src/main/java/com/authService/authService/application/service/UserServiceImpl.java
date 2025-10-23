@@ -16,16 +16,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
