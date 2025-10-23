@@ -1,6 +1,5 @@
 package com.authService.authService.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,32 +18,23 @@ import com.authService.authService.infraestructure.in.filter.JwtValidationFilter
 
 @EnableMethodSecurity
 @Configuration
+@requiredargsconstructor
 public class SpringSecurityConfig {
 
-    @Autowired
-    private AuthenticationConfiguration authenticationConfiguration;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
-
-    @Bean
-    AuthenticationManager authenticationManager() throws Exception{
+    private final AuthenticationManager authenticationManager() throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    PasswordEncoder passwordEncoder(){
+    private final PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
-
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity httpSecurity,AuthenticationManager authenticationManager) throws Exception{
-                                     
-
-    
+    private final SecurityFilterChain filterChain(HttpSecurity httpSecurity,AuthenticationManager authenticationManager) throws Exception{
+        
         return httpSecurity.csrf(config -> config.disable())
         .authorizeHttpRequests((auth) -> auth
-            // .requestMatchers(HttpMethod.GET,"/api/users").permitAll()
-            // .requestMatchers(HttpMethod.POST,"/api/users").permitAll()
             .requestMatchers(HttpMethod.GET,"/api/users/**").authenticated()
             .requestMatchers(HttpMethod.POST, "/api/users/registerAdmin").hasAuthority("ROLE_ADMIN")
             .requestMatchers(HttpMethod.POST,"/api/users/register").permitAll().
@@ -53,9 +43,6 @@ public class SpringSecurityConfig {
             .addFilter(new JwtValidationFilter(authenticationManager()))
             .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
-
-            
-
     }
 
 }
