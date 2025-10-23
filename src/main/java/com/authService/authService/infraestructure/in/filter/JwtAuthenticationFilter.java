@@ -32,10 +32,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
-
-   // private AuthenticationManager authenticationManager;
-
-
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
     }
@@ -53,20 +49,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             username = userEntity.getUsername();
             password = userEntity.getPassword();
 
-        } catch (StreamReadException e) {
-            e.printStackTrace();
-        } catch (DatabindException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }  catch (StreamReadException | DatabindException | IOException e) {
+             e.printStackTrace();
         }
-
-
+               
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,password);
 
             return this.getAuthenticationManager().authenticate(authenticationToken);
-
-
     }
 
     @Override
@@ -102,8 +91,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
              response.getWriter().write(new ObjectMapper().writeValueAsString(body));
              response.setContentType(CONTENT_TYPE);
              response.setStatus(200);
-
-
     }
 
     @Override
@@ -111,12 +98,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             AuthenticationException failed) throws IOException, ServletException {
         
                 Map<String,String> body = new HashMap<>();
-                body.put("message","Error en la autenticacion username o password incorrecto");
+                body.put("message","Authentication error or incorrect password");
                 body.put("error", failed.getMessage());
                 response.getWriter().write(new ObjectMapper().writeValueAsString(body));
                 response.setStatus(401);
                 response.setContentType(CONTENT_TYPE);
-    }
-    
-
+    }  
 }
