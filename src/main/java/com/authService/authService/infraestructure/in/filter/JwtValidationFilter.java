@@ -45,10 +45,8 @@ public class JwtValidationFilter extends BasicAuthenticationFilter{
                     chain.doFilter(request, response);
                     return;
                 }
-
                 String token = header.replace(PREFIX_TOKEN,"").trim();
-
-
+                
                 try{
 
                     Claims claims = Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload();
@@ -63,7 +61,6 @@ public class JwtValidationFilter extends BasicAuthenticationFilter{
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     chain.doFilter(request, response);
                     
-
                 }catch(JwtException e){
                     
                     Map<String,String> body = new HashMap<>();
@@ -76,19 +73,6 @@ public class JwtValidationFilter extends BasicAuthenticationFilter{
 
 
                 }
-
-
-
                 
-
-
-
-      
     }
-
-
-    
-
-
-
 }
