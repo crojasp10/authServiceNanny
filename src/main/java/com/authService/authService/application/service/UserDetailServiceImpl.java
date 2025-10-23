@@ -30,7 +30,7 @@ public class UserDetailServiceImpl implements UserDetailsService{
         Optional<UserEntity> userOptional = userRepository.findByUsername(username);
 
         if(userOptional.isEmpty()){
-            throw new UsernameNotFoundException(String.format("Username %s no existe en la db", username));
+            throw new UsernameNotFoundException(String.format("Username %s does not exist in the db", username));
         }
         UserEntity user = userOptional.orElseThrow();
 
