@@ -18,12 +18,10 @@ import com.authService.authService.infraestructure.out.UserEntity;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-
-    @Autowired
     private UserService userService;
-
 
     @GetMapping
     public List<UserEntity> getAllUsers(){
@@ -35,7 +33,6 @@ public class UserController {
     public ResponseEntity<UserEntity> saveUser( @RequestBody UserEntity userEntity){
 
        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userEntity));
-
     }
 
     @PostMapping("/register")
@@ -44,6 +41,4 @@ public class UserController {
        return saveUser(userEntity);
 
     }
-
-
 }
