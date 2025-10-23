@@ -37,7 +37,6 @@ public class UserDetailServiceImpl implements UserDetailsService{
         List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
             new SimpleGrantedAuthority(role.getName())
         ).collect(Collectors.toList());
-
         return new User(user.getUsername(),user.getPassword(),user.isEnabled(),true,true,true,authorities);
 
 
