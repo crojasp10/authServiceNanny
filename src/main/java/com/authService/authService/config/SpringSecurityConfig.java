@@ -1,7 +1,5 @@
 package com.authService.authService.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,32 +14,34 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.authService.authService.infraestructure.in.filter.JwtAuthenticationFilter;
 import com.authService.authService.infraestructure.in.filter.JwtValidationFilter;
 
+import lombok.RequiredArgsConstructor;
+
 @EnableMethodSecurity
 @Configuration
-@requiredargsconstructor
+@RequiredArgsConstructor
 public class SpringSecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
 
-    private final AuthenticationManager authenticationManager() throws Exception{
+    private final AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    private final PasswordEncoder passwordEncoder(){
+    private final PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    private final SecurityFilterChain filterChain(HttpSecurity httpSecurity,AuthenticationManager authenticationManager) throws Exception{
-        
+    private final SecurityFilterChain filterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
+
         return httpSecurity.csrf(config -> config.disable())
-        .authorizeHttpRequests((auth) -> auth
-            .requestMatchers(HttpMethod.GET,"/api/users/**").authenticated()
-            .requestMatchers(HttpMethod.POST, "/api/users/registerAdmin").hasAuthority("ROLE_ADMIN")
-            .requestMatchers(HttpMethod.POST,"/api/users/register").permitAll().
-            anyRequest().permitAll())
-            .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-            .addFilter(new JwtValidationFilter(authenticationManager()))
-            .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests((auth) -> auth
+                .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/users/registerAdmin").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll().
+                anyRequest().permitAll())
+                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+                .addFilter(new JwtValidationFilter(authenticationManager()))
+                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
 

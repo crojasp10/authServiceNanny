@@ -1,15 +1,26 @@
 package com.authService.authService.infraestructure.out;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
@@ -33,14 +44,14 @@ public class UserEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean admin;
 
-    @JsonIgnoreProperties({"users","handler","hibernateLazyInitializer"})
+    @JsonIgnoreProperties({"users", "handler", "hibernateLazyInitializer"})
     @ManyToMany
     @JoinTable(name = "user_roles",
-                joinColumns = @JoinColumn(name="user_id"),
-                inverseJoinColumns = @JoinColumn(name = "role_id"),
-                uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","role_id"})})
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"),
+            uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "role_id"})})
     private List<RoleEntity> roles;
-
 
     public UserEntity() {
         this.roles = new ArrayList<>();
@@ -48,7 +59,9 @@ public class UserEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UserEntity that = (UserEntity) o;
         return Objects.equals(id, that.id) && Objects.equals(username, that.username);
     }
@@ -59,12 +72,8 @@ public class UserEntity {
     }
 
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         enabled = true;
     }
-
-
-
-
 
 }

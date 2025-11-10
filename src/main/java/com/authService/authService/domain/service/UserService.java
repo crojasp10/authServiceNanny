@@ -1,9 +1,8 @@
 package com.authService.authService.domain.service;
 
+import java.util.List;
 
 import com.authService.authService.infraestructure.out.UserEntity;
-
-import java.util.List;
 
 public interface UserService {
 
@@ -13,4 +12,3 @@ public interface UserService {
 
     boolean existsByUsername(String username);
 }
-

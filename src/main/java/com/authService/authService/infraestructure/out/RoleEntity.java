@@ -32,7 +32,7 @@ public class RoleEntity {
     @Column(unique = true)
     private String name;
 
-    @JsonIgnoreProperties({"roles","handler","hibernateLazyInitializer"})
+    @JsonIgnoreProperties({"roles", "handler", "hibernateLazyInitializer"})
     @ManyToMany(mappedBy = "roles")
     private List<UserEntity> users;
 
@@ -42,7 +42,9 @@ public class RoleEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RoleEntity that = (RoleEntity) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }

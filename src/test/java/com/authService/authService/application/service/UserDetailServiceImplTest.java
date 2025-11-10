@@ -1,39 +1,44 @@
-package com.authService.authService;
+package com.authService.authService.application.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.authService.authService.domain.port.UserRepository;
+import com.authService.authService.infraestructure.out.UserEntity;
 
-import java.util.Set;
+import lombok.RequiredArgsConstructor;
 
 @SpringBootTest
-@RequiredArgsConstructor	
-class AuthServiceApplicationTests {
+@RequiredArgsConstructor
+public class UserDetailServiceImplTest {
 
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailServiceImpl userDetailsService;
 
     private final UserRepository userRepository;
 
     @Test
-    void contextLoads() {
+    void testLoadUserByUsername() {
+
     }
 
     @Test
     void loadUserByUsernameUserExistsReturnsUserDetails() {
-        
+
         UserEntity user = new UserEntity();
         user.setUsername("john");
         user.setPassword("password123");
         user.setEnabled(true);
-        user.setRoles(Set.of(new RoleEntity("ROLE_USER")));
+        user.setAdmin(true);
         userRepository.save(user);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername("john");
-		
+
         assertNotNull(userDetails);
         assertEquals("john", userDetails.getUsername());
         assertTrue(userDetails.getAuthorities().stream()
@@ -45,4 +50,5 @@ class AuthServiceApplicationTests {
         assertThrows(UsernameNotFoundException.class,
                 () -> userDetailsService.loadUserByUsername("no_existe"));
     }
+
 }
